@@ -1,0 +1,90 @@
+View đưa dữ liệu đến ActionCreator(action.js) =>tạo 1 action đến Store, trong Store(chứa Middleware, Reducer, StateTree(tất cả state của ứng dụng) nó sẽ qua middleware trước để chuyển action(đang đồng bộ) thành 1 hàm bất đồng bộ(chạy các phương thức con cùng lúc, trong đó có quá trình lâu nhất là gọi API(get, post data)); sau đó đến Reducer(reducer.js) để chọn reducer từ đó trả về state cần thiết cho View (Store chỉ làm việc với rootReducer, rootReducer là tham số tạo nên Store(xem store.js) rootReducer quản lý nhiều reducer con trong (reducer.js), trong đó có initialState khai báo toàn bộ state của ứng dụng. Lưu ý Reducer là nằm bên trong Store; mô hình Redux khác với việc các file .js riêng biệt gọi cho nhau)
+_________________________________________________________________________________________________________________________________________________________________________________
+Triển khai ứng dụng Redux-Saga
+
+Tạo mới project ReactJS:
+npx create-react-app redux-saga
+
+Để sử dụng được redux cần cài đặt các gói sau: npm install redux react-redux redux-saga react-router-dom axios
+
+npm install redux  (Sử dụng thư viện redux quản lý state)
+npm install react-redux (Đi kèm với gói redux cho phép sử dụng các hàm trong thư viện)
+npm install redux-saga (Cho phép redux xử lý các side-effect)
+npm install react-router-dom (Sử dụng gói này để quản lí router)
+npm install axios (Sử dụng gói này để call các API)
+____________________________________________________________________________________
+Triển khai ứng dụng Redux-Thunk: 
+
+npx create-react-app redux-thunk
+cd redux-thunk
+
+npm install redux react-redux redux-thunk react-router-dom axios
+_________________________________________________________________________________________________________________________________________________________________________________
+
+Redux là một state management Tool
+
+Store là một vùng chứa state của ứng dụng Redux, mỗi component đều có thể access bất kỳ state nào mà chúng muốn từ chúng store này
+
+có thể tạo một store bằng phương thức createStore từ Redux. Cần import gói createStore từ thư viện Redux:
+
+import { createStore } from 'redux';
+import reducer from './reducers/reducer'
+
+const store = createStore(reducer);
+Hàm createStore có thể có ba đối số. Sau đây là cú pháp:
+
+createStore(reducer, [preloadedState], [enhancer])
+Reducer là một hàm trả về trạng thái tiếp theo của ứng dụng. 
+PreloadedState là một đối số tùy chọn và là trạng thái ban đầu của ứng dụng.
+Enhancer cũng là một đối số tùy chọn. Nó sẽ giúp nâng cao store với khả năng của bên thứ ba.
+
+Một store có ba phương thức quan trọng như sau:
+
+getState
+Nó giúp bạn truy xuất state hiện tại của store. Cú pháp cho getState như sau:
+store.getState()
+
+dispatch
+Nó cho phép bạn gửi một action để thay đổi state trong ứng dụng của bạn. Cú pháp của dispatch như sau:
+store.dispatch({type:'ITEMS_REQUEST'})
+
+subscribe
+Nó giúp đăng ký một callback mà Redux Store sẽ gọi khi một action đã được gửi đi. Ngay sau khi state Redux được cập nhật, view sẽ tự động hiển thị lại.
+store.subscribe(()=>{ console.log(store.getState());})
+
+Lưu ý rằng hàm đăng ký trả về một hàm để hủy đăng ký. Để hủy đăng ký, chúng ta có thể sử dụng đoạn mã dưới đây:
+
+const unsubscribe = store.subscribe(()=>{console.log(store.getState());});
+unsubscribe();
+_______________________________________________________________________________________________
+Redux Middleware
+
+Bản thân Redux là đồng bộ, vậy các hoạt động bất đồng bộ ví dụ như thực hiện một yêu cầu tới server thì Redux sẽ hoạt động như thế nào?
+
+Với yêu cầu như trên thì Middleware là rất tiện lợi. 
+
+Reducer là nơi viết tất cả logic thực thi. Reducer không liên quan đến việc ai thực hiện nó, mất bao nhiêu thời gian hoặc ghi lại trạng thái của ứng dụng trước và sau khi hành động được thực hiện.
+
+Trong trường hợp này, middleware của Redux cung cấp một phương tiện để tương tác với action được gửi đi trước khi chúng tiếp cận reducer.
+
+Middleware được tùy chỉnh có thể được tạo ra bằng cách viết các hàm bậc cao (một hàm trả về một hàm khác), bao bọc xung quanh một số logic.
+
+Nhiều Middleware có thể được kết hợp với nhau để thêm chức năng mới và mỗi middleware không cần biết những gì xảy ra trước và sau.
+
+Có thể tưởng tượng middleware ở đâu đó giữa action và reducer.
+
+Thông thường, middleware được sử dụng để xử lý các hành động không đồng bộ trong ứng dụng của bạn.
+
+Redux cung cấp API được gọi là applyMiddleware cho phép chúng ta sử dụng middleware tùy chỉnh cũng như các Redux middleware như redux-thunk và redux-promise.
+
+Cú pháp của việc sử dụng applyMiddleware là:
+
+applyMiddleware(...middleware)
+
+Và có thể áp dụng cách này để lưu trữ như sau:
+
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducers/index";
+
+const store = createStore(rootReducer, applyMiddleware(thunk));

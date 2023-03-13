@@ -1,0 +1,84 @@
+npx create-react-app todo-list-redux
+cd todo-list-redux
+npm install redux react-redux uuid --save bootstrap
+npm start
+________________________________________________________________________
+2/ Tạo file action.js
+Tạo action thêm công việc bằng action creator
+action addTodoAction sẽ nhận tham số data gồm id và tên của công việc
+
+Tạo action xoá công việc bằng action creator
+action deleteTodoAction sẽ nhận tham số data là id của công việc
+
+3/ Redux reducer thường được tách thành các reducer riêng biệt dựa trên các state mà chúng cập nhật, 
+điều này giúp quá trình phát triển và quản lí code được thực hiện dễ dàng hơn. Ví dụ:
+
+todosReducer: dùng để cập nhật state của todos list (Tạo, Xoá)
+filtersReducer: dùng để cập nhật state của bộ lọc
+Trong bài thực hành này, chúng ta sẽ tạo một reducer có tên todosReducer có nhiệm vụ tạo và xoá todos
+
+Tạo file todosReducer.js
+Tạo initialState
+Tạo function todosReducer
+Nhận tham số đầu vào là initialState và action
+Khi action type = ‘todos/todoAdded’, thực hiện lưu một todo vào state, thuộc tính của một todo gồm:
+id: mã của công việc
+text: tên công việc
+
+Trong function todosReducer, triển khai action ‘todos/todoDeleted’
+Khi action type = ‘todos/todoDeleted’, thực hiện xoá một todo dựa vào
+id: mã của công việc
+
+4/ Gộp reducer
+
+Tạo file reducer.js
+import combineReducers
+import todosReducer
+Tạo và export rootReducer
+
+5/ Tạo Store
+
+Tạo file store.js
+import createStore
+import rootReducer
+Tạo và export store
+
+6/ Tạo các component cần sử dụng trong dự án
+Bao gồm NewTodo, TodoList và TodoListItem components
+File NewTodo.js
+
+Thêm các thư viện, action
+Tạo component NewTodo
+- Khởi tạo state
+- Khởi tạo dispatch
+- Viết hàm xử lí sự kiện nhập input text
+- Viết hàm xử lí sự kiện tạo todo
++ Thực hiện gọi dispatch với action addTodoAction và truyền payload gồm id và text
+Viết giao diện và kết nối sự kiện handleInputChange, handleSubmit
+
+File TodoListItem.js
+
+Thêm thư viện, action
+Tạo component TodoListItem
+- Component sẽ nhận giá trị props từ component TodoList
+- Khởi tạo dispatch
+- Viết hàm xử lí sự kiện xoá một todo
++ Thực hiện gọi dispatch với action deleteTodoAction và truyền payload là id của todo
+Viết giao diện và kết nối sự kiện handleRemove
+
+File TodoList.js
+
+Thêm thư viện, component
+Tạo component TodoList
++ Sử dụng useSelector để truy cập state
++ Hiển thị danh sách todos với component TodoListItem
+
+7/ Ghép giao diện ứng dụng trong App.js
+
+Thêm thư viện, component
+Ghép giao diện ứng dụng với các component NewTodo, TodoList
+
+8/ Truyền store tới React UI trong index.js:
+
+Import và sử dụng Provider để bọc toàn bộ app.
+Cung cấp store cho Provider.

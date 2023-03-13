@@ -1,0 +1,39 @@
+Redux là một state management Tool
+
+View đưa dữ liệu đến ActionCreator(action.js) => tạo 1 action{type, payload} đến Store, 
+trong Store (chứa Middleware, Reducer, StateTree(tất cả state của ứng dụng).
+Các hàm actionCreator trả về một hàm không đồng bộ sử dụng async/await(Middleware ở đây?) và đẩy tới Reducer
+(chạy các phương thức con cùng lúc, trong đó có quá trình lâu nhất là gọi API(get, post data));
+sau đó đến Reducer(reducer.js) để chọn reducer từ đó trả về state cần thiết cho View 
+(Store chỉ làm việc với rootReducer, rootReducer là tham số tạo nên Store(xem store.js)
+rootReducer quản lý nhiều reducer con trong (reducer.js), trong đó có initialState 
+khai báo toàn bộ state của ứng dụng. Lưu ý Reducer là nằm bên trong Store;
+mô hình Redux khác với việc các file .js riêng biệt gọi cho nhau)
+
+Sau khi viết xong các file redux thì dùng <Provider store={store}> bao quanh thẻ <BrowserRouter> trong App.js
+___________________________________________________________________________________
+
+Triển khai ứng dụng Redux-Thunk: 
+
+npx create-react-app redux-thunk
+cd redux-thunk
+npm install redux react-redux redux-thunk react-router-dom axios
+npm start
+___________________________________________________________________________________
+Thunk và Saga là các thư viện được sử dụng trong ứng dụng Redux để quản lý các tác vụ 
+không đồng bộ (asynchronous tasks) và xử lý các hành động (actions) Redux
+
+useEffect hook sẽ được gọi sau mỗi lần rendering của component. Nếu muốn useEffect được gọi 
+duy nhất khi một số giá trị dependencies thay đổi, sử dụng một mảng dependencies như sau:
+
+useEffect(callback, [dependencies]);
+"dependencies" là một mảng các giá trị phụ thuộc mà useEffect sẽ kiểm tra khi component được rendering lại. 
+Nếu giá trị của dependencies thay đổi so với lần render trước đó, useEffect sẽ được gọi lại.
+
+Nếu không muốn useEffect được gọi lại khi bất kỳ giá trị nào thay đổi, có thể để dependencies rỗng:
+
+useEffect(() => {
+  // This function will run only once, when the component is first mounted
+}, []);
+Nếu dependencies không được cung cấp, useEffect sẽ được gọi sau mỗi lần rendering của component, 
+có thể gây ra hiệu ứng phụ không mong muốn & ảnh hưởng đến hiệu suất của ứng dụng
